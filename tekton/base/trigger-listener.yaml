@@ -5,7 +5,12 @@ metadata:
 spec:
   serviceAccountName: vcs-trigger-sa
   triggers:
-    - bindings:
+    - interceptors:
+        - github:
+            secretRef:
+              secretName: github-interceptor-secret
+              secretKey: secretToken
+      bindings:
         - ref: vcs-trigger-binding
       template:
         name: vcs-trigger-template
