@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: express-app-pipeline
+spec:
+  workspaces:
+    - name: pipeline-shared-workspace
+  params:
+    - name: source-code-repo
+      type: string
+    - name: docker-image
+      type: string
+  tasks:
+    - name: clone-source-code
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: "$(params.source-code-repo)"
+      workspaces:
+        - name: output
+          workspace: pipeline-shared-workspace
+    - name: build-and-publish
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      runAfter:
+        - clone-source-code
+      params:
+        - name: IMAGE
+          value: "$(params.docker-image):$(tasks.clone-source-code.results.commit)"
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-workspace

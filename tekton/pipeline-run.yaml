@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: express-app-pipelinerun-
+spec:
+  serviceAccountName: tekton-sa
+  params:
+    - name: source-code-repo
+      value: https://github.com/cloud-native-garage-method-cohort/dale-lane-buildah-assignment
+    - name: docker-image
+      value: quay.io/dale-lane/express-dale-lane
+  pipelineRef:
+    name: express-app-pipeline
+  workspaces:
+    - name: pipeline-shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 100Mi
