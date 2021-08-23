@@ -1,0 +1,11 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: vcs-trigger-listener
+spec:
+  serviceAccountName: vcs-trigger-sa
+  triggers:
+    - bindings:
+        - ref: vcs-trigger-binding
+      template:
+        name: vcs-trigger-template
