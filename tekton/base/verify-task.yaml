@@ -4,6 +4,8 @@ metadata:
   name: verify
 spec:
   params:
+    - name: app-name
+      description: name of the application (and deployment)
     - name: namespace
       description: namespace for the deployment
   results:
@@ -15,6 +17,6 @@ spec:
       script: |
         #!/bin/sh
         set -x
-        kubectl rollout status deployment express-app -n $(params.namespace)
-        kubectl get all -l app=express-app -n $(params.namespace)
-        echo "https://$(kubectl get route express-app -n $(params.namespace) -o jsonpath={.spec.host})" | tee $(results.url.path)
+        kubectl rollout status deployment $(params.app-name) -n $(params.namespace)
+        kubectl get all -l app=$(params.app-name) -n $(params.namespace)
+        echo "https://$(kubectl get route $(params.app-name) -n $(params.namespace) -o jsonpath={.spec.host})" | tee $(results.url.path)

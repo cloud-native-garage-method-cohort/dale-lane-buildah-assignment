@@ -7,6 +7,10 @@ spec:
   params:
     - name: source-code-repo
       value: https://github.com/cloud-native-garage-method-cohort/dale-lane-buildah-assignment
+    - name: deployment-name
+      value: express-app
+    - name: deployment-namespace
+      value: "$(context.pipelineRun.namespace)"
     - name: docker-image
       value: quay.io/dale-lane/express-dale-lane
   pipelineRef:

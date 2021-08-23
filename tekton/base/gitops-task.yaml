@@ -6,6 +6,8 @@ spec:
   params:
     - name: app-name
       description: name of the app
+    - name: namespace
+      description: namespace where the app was deployed
     - name: sha
       description: sha of the current commit
   workspaces:

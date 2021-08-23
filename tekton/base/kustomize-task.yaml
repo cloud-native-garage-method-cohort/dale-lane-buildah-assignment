@@ -7,6 +7,9 @@ spec:
     - name: commit
       type: string
       description: source code commit id, also used as the image tag
+    - name: image-name
+      type: string
+      description: name of image to deploy
   workspaces:
     - name: source
       description: contents of source code repository
@@ -16,6 +19,6 @@ spec:
       script: |
         #!/bin/sh
         cd source/k8s
-        kustomize edit set image "quay.io/dale-lane/express-dale-lane:$(params.commit)"
+        kustomize edit set image "$(params.image-name):$(params.commit)"
         kustomize build > manifests.yaml
         cat manifests.yaml
