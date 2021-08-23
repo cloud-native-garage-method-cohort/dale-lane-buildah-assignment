@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: verify
+spec:
+  params:
+    - name: namespace
+      description: namespace for the deployment
+  results:
+    - name: url
+      description: the URL for the route that is hosting the app
+  steps:
+    - name: verify
+      image: quay.io/upslopeio/kubectl:latest
+      script: |
+        #!/bin/sh
+        set -x
+        kubectl rollout status deployment express-app -n $(params.namespace)
+        kubectl get all -l app=express-app -n $(params.namespace)
+        echo "https://$(kubectl get route express-app -n $(params.namespace) -o jsonpath={.spec.host})" | tee $(results.url.path)

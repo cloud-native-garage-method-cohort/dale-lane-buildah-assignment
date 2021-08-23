@@ -33,3 +33,33 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-shared-workspace
+    - name: configure
+      taskRef:
+        name: kustomize
+      runAfter:
+        - build-and-publish
+      params:
+        - name: commit
+          value: "$(tasks.clone-source-code.results.commit)"
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-workspace
+    - name: deploy
+      taskRef:
+        name: deploy
+      runAfter:
+        - configure
+      params:
+        - name: namespace
+          value: "$(context.pipelineRun.namespace)"
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-workspace
+    - name: verify
+      taskRef:
+        name: verify
+      runAfter:
+        - deploy
+      params:
+        - name: namespace
+          value: "$(context.pipelineRun.namespace)"
