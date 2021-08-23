@@ -63,3 +63,16 @@ spec:
       params:
         - name: namespace
           value: "$(context.pipelineRun.namespace)"
+    - name: gitops
+      taskRef:
+        name: commit-manifest
+      runAfter:
+        - deploy
+      params:
+        - name: app-name
+          value: express-app
+        - name: sha
+          value: "$(tasks.clone-source-code.results.commit)"
+      workspaces:
+        - name: source
+          workspace: pipeline-shared-workspace
